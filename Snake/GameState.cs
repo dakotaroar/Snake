@@ -1,8 +1,10 @@
-﻿using System;
+﻿using NAudio.Wave;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using NAudio.Wave;
 
 namespace Snake
 {
@@ -166,6 +168,10 @@ namespace Snake
             }
             else if (hit == GridValue.Food)
             {
+                var audioFile = new AudioFileReader("C:\\Users\\802630ctc\\source\\repos\\Snake\\Snake\\Assets\\censor-beep-1.mp3");
+                var waveOut = new WaveOut();
+                waveOut.Init(audioFile);
+                waveOut.Play();
                 AddHead(newHeadPos);
                 Score++;
                 AddFood();

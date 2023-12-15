@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Snake"
         mc:Ignorable="d"
-        Title="Snake" Height="500" Width="800" 
+        Title="Totally AmongUs™" Height="500" Width="800" 
         MinWidth="300" MinHeight="300"
         Background="{StaticResource BackGroundColor}"
         Foreground="{StaticResource TextColor}"
@@ -19,6 +19,7 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="auto"/>
                 <RowDefinition Height="*"/>
+                <RowDefinition Height="auto"/>
             </Grid.RowDefinitions>
 
             <TextBlock x:Name="ScoreText"
@@ -30,6 +31,17 @@
                FontFamily="Old English Text MT"
                FontStyle="Italic"
                FontWeight="Bold"/>
+
+            <TextBlock x:Name="HighScoreText"
+               HorizontalAlignment="Center"
+               VerticalAlignment="Center"
+               Text="HIGH SCORE 0"
+               FontSize="22"
+               Margin="10"
+               FontFamily="Old English Text MT"
+               FontStyle="Italic"
+               FontWeight="Bold"
+               Grid.Row="2"/>
 
             <Border x:Name="GridBorder"
             Grid.Row="1"

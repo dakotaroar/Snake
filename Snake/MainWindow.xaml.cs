@@ -12,16 +12,20 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-
+using Microsoft.VisualBasic.Devices;
+using NAudio.Wave;
+using System.IO;
 
 namespace Snake
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    /// 
     public partial class MainWindow : Window
     {
+        private WaveOutEvent waveOut;
+        private AudioFileReader audioFileReader;
+
         private readonly Dictionary<GridValue, ImageSource> gridValToImage = new()
         {
             { GridValue.Empty, Images.Empty },
@@ -42,12 +46,28 @@ namespace Snake
         private readonly Image[,] gridImages;
         private GameState gameState;
         private bool gameRunning;
+        private int highScore = 0;
         public MainWindow()
         {
             InitializeComponent();
             gridImages = SetupGrid();
             gameState = new GameState(rows, cols);
+            string fileName = System.IO.Path.Combine(Directory.GetCurrentDirectory(), "highscore.txt");
+            if (File.Exists(fileName))
+            {
+                StreamReader sr = new StreamReader(fileName);
+                highScore = int.Parse(sr.ReadLine());
+                sr.Close();
+                HighScoreText.Text = $"High Score: {highScore}";
+            }
+            else
+            {
+                StreamWriter sw = new StreamWriter(fileName);
+                sw.WriteLine(highScore);
+                sw.Close();
+            }
         }
+
 
         private async Task RunGame()
         {
@@ -137,6 +157,14 @@ namespace Snake
             DrawGrid();
             DrawSnakeHead();
             ScoreText.Text = $"SCORE {gameState.Score}";
+
+            if (ScoreText.Text == "SCORE 69")
+            {
+                var audioFile = new AudioFileReader("C:\\Users\\802630ctc\\source\\repos\\Snake\\Snake\\Assets\\ding-sound-effect_1.mp3");
+                var waveOut = new WaveOut();
+                waveOut.Init(audioFile);
+                waveOut.Play();
+            }
         }
 
         private void DrawGrid()
@@ -164,8 +192,11 @@ namespace Snake
 
         private async Task DrawDeadSnake()
         {
+            var audioFile = new AudioFileReader("C:\\Users\\802630ctc\\source\\repos\\Snake\\Snake\\Assets\\femur-breaker-[AudioTrimmer.com].mp3");
+            var waveOut = new WaveOut();
+            waveOut.Init(audioFile);
+            waveOut.Play();
             List<Position> positions = new List<Position>(gameState.SnakePositions());
-
             for (int i = 0; i < positions.Count; i++)
             {
                 Position pos = positions[i];
@@ -177,6 +208,10 @@ namespace Snake
 
         private async Task ShowCountDown()
         {
+            var audioFile = new AudioFileReader("C:\\Users\\802630ctc\\source\\repos\\Snake\\Snake\\Assets\\nnnnn_luSV5Gb.mp3");
+            var waveOut = new WaveOut();
+            waveOut.Init(audioFile);
+            waveOut.Play();
             for (int i = 3; i >= 1; i--) 
             { 
                 OverlayText.Text = i.ToString();
@@ -186,10 +221,23 @@ namespace Snake
 
         private async Task ShowGameOver()
         {
+            if (gameState.Score > highScore)
+            {
+                highScore = gameState.Score;
+                StreamWriter sw = new StreamWriter(Directory.GetCurrentDirectory() + "\\highscore.txt");
+                sw.WriteLine(highScore);
+                sw.Close();
+            }
+
+            HighScoreText.Text = $"High Score: {highScore}";
+
             await DrawDeadSnake();
             await Task.Delay(1000);
             Overlay.Visibility = Visibility.Visible;
             OverlayText.Text = "PRESS ANY KEY TO START";
         }
+
     }
 }
+
+
