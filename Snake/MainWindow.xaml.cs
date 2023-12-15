@@ -52,7 +52,7 @@ namespace Snake
             InitializeComponent();
             gridImages = SetupGrid();
             gameState = new GameState(rows, cols);
-            string fileName = System.IO.Path.Combine(Directory.GetCurrentDirectory(), "highscore.txt");
+            string fileName = System.IO.Path.Combine(Directory.GetCurrentDirectory(), "highscore.txt"); 
             if (File.Exists(fileName))
             {
                 StreamReader sr = new StreamReader(fileName);
