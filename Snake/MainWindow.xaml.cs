@@ -158,9 +158,33 @@ namespace Snake
             DrawSnakeHead();
             ScoreText.Text = $"SCORE {gameState.Score}";
 
-            if (ScoreText.Text == "SCORE 69")
+            if (gameState.Score == 69)
             {
                 var audioFile = new AudioFileReader("C:\\Users\\802630ctc\\source\\repos\\Snake\\Snake\\Assets\\ding-sound-effect_1.mp3");
+                var waveOut = new WaveOut();
+                waveOut.Init(audioFile);
+                waveOut.Play();
+            }
+
+            if (gameState.Score == 100 )
+            {
+                var audioFile = new AudioFileReader("C:\\Users\\802630ctc\\source\\repos\\Snake\\Snake\\Assets\\japanese-eas-alarm.mp3");
+                var waveOut = new WaveOut();
+                waveOut.Init(audioFile);
+                waveOut.Play();
+            }
+
+            if (gameState.Score == 200)
+            {
+                var audioFile = new AudioFileReader("C:\\Users\\802630ctc\\source\\repos\\Snake\\Snake\\Assets\\israel-eas-alarm.mp3");
+                var waveOut = new WaveOut();
+                waveOut.Init(audioFile);
+                waveOut.Play();
+            }
+
+            if (gameState.Score == 150)
+            {
+                var audioFile = new AudioFileReader("C:\\Users\\802630ctc\\source\\repos\\Snake\\Snake\\Assets\\daft-punk-robot-rock-official-audio.mp3");
                 var waveOut = new WaveOut();
                 waveOut.Init(audioFile);
                 waveOut.Play();

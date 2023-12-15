@@ -11,7 +11,7 @@
         Foreground="{StaticResource TextColor}"
         FontFamily="{StaticResource MainFont}"
         WindowStartupLocation="CenterScreen"
-        Icon="Assets/icon.ico"
+        Icon="C:\Users\802630ctc\source\repos\Snake\Snake\Assets\among-us.ico"
         PreviewKeyDown="Window_PreviewKeyDown"
         KeyDown="Window_KeyDown">
     <Viewbox>
