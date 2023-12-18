@@ -172,6 +172,7 @@ namespace Snake
                 var waveOut = new WaveOut();
                 waveOut.Init(audioFile);
                 waveOut.Play();
+
                 AddHead(newHeadPos);
                 Score++;
                 AddFood();

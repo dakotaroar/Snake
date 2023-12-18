@@ -10,7 +10,6 @@
   <ItemGroup>
     <None Remove="Assets\DroidSansMono.ttf" />
     <None Remove="Assets\Empty.png" />
-    <None Remove="Assets\Food.png" />
     <None Remove="Assets\icon.ico" />
   </ItemGroup>
 
@@ -21,7 +20,6 @@
   <ItemGroup>
     <Resource Include="Assets\DroidSansMono.ttf" />
     <Resource Include="Assets\Empty.png" />
-    <Resource Include="Assets\Food.png" />
     <Resource Include="Assets\icon.ico" />
   </ItemGroup>
 

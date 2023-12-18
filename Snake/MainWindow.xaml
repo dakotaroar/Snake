@@ -79,6 +79,9 @@
                            FontStyle="Italic"
                            FontWeight="Bold"/>
             </Border>
+            <TextBlock x:Name="timeTextBlock" HorizontalAlignment="Left" Margin="-188,404,0,0" Grid.Row="1" TextWrapping="Wrap"
+                       VerticalAlignment="Top" Text="Time: 00:00" Height="27" Width="140" FontSize="20" Grid.RowSpan="2"
+                       FontFamily="Old English Text MT" FontStyle="Italic" FontWeight="Bold"/>
         </Grid>
     </Viewbox>
 </Window>

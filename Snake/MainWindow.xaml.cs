@@ -15,6 +15,7 @@ using System.Windows.Shapes;
 using Microsoft.VisualBasic.Devices;
 using NAudio.Wave;
 using System.IO;
+using System.Windows.Threading;
 
 namespace Snake
 {
@@ -25,6 +26,8 @@ namespace Snake
     {
         private WaveOutEvent waveOut;
         private AudioFileReader audioFileReader;
+        private DispatcherTimer timer;
+        private int seconds;
 
         private readonly Dictionary<GridValue, ImageSource> gridValToImage = new()
         {
@@ -49,6 +52,14 @@ namespace Snake
         private int highScore = 0;
         public MainWindow()
         {
+            // Initialize the timer
+            timer = new DispatcherTimer();
+            timer.Interval = TimeSpan.FromSeconds(1); // Set the interval to 1 second
+            timer.Tick += OnTimerTick;
+
+            // Initial seconds value
+            seconds = 0;
+
             InitializeComponent();
             gridImages = SetupGrid();
             gameState = new GameState(rows, cols);
@@ -68,9 +79,23 @@ namespace Snake
             }
         }
 
+        private void OnTimerTick(object sender, EventArgs e)
+        {
+            // Calculate minutes and remaining seconds
+            int minutes = seconds / 60;
+            int remainingSeconds = seconds % 60;
+
+            // Update the TextBlock with the formatted time
+            timeTextBlock.Text = $"Time: {minutes:D2}:{remainingSeconds:D2}";
+
+            // Increment the seconds counter
+            seconds++;
+        }
+
 
         private async Task RunGame()
         {
+            timer.Start();
             Draw();
             await ShowCountDown();
             Overlay.Visibility = Visibility.Hidden;
@@ -166,7 +191,7 @@ namespace Snake
                 waveOut.Play();
             }
 
-            if (gameState.Score == 100 )
+            if (gameState.Score == 50 )
             {
                 var audioFile = new AudioFileReader("C:\\Users\\802630ctc\\source\\repos\\Snake\\Snake\\Assets\\japanese-eas-alarm.mp3");
                 var waveOut = new WaveOut();
@@ -174,7 +199,7 @@ namespace Snake
                 waveOut.Play();
             }
 
-            if (gameState.Score == 200)
+            if (gameState.Score == 150)
             {
                 var audioFile = new AudioFileReader("C:\\Users\\802630ctc\\source\\repos\\Snake\\Snake\\Assets\\israel-eas-alarm.mp3");
                 var waveOut = new WaveOut();
@@ -182,7 +207,7 @@ namespace Snake
                 waveOut.Play();
             }
 
-            if (gameState.Score == 150)
+            if (gameState.Score == 100)
             {
                 var audioFile = new AudioFileReader("C:\\Users\\802630ctc\\source\\repos\\Snake\\Snake\\Assets\\daft-punk-robot-rock-official-audio.mp3");
                 var waveOut = new WaveOut();
@@ -236,6 +261,7 @@ namespace Snake
             var waveOut = new WaveOut();
             waveOut.Init(audioFile);
             waveOut.Play();
+            seconds = 0;
             for (int i = 3; i >= 1; i--) 
             { 
                 OverlayText.Text = i.ToString();
@@ -255,6 +281,7 @@ namespace Snake
 
             HighScoreText.Text = $"High Score: {highScore}";
 
+            timer.Stop();
             await DrawDeadSnake();
             await Task.Delay(1000);
             Overlay.Visibility = Visibility.Visible;
