@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Snake"
         mc:Ignorable="d"
-        Title="Totally AmongUs™" Height="500" Width="800" 
+        Title="Totally AmongUs™" Height="900" Width="1400" 
         MinWidth="300" MinHeight="300"
         Background="{StaticResource BackGroundColor}"
         Foreground="{StaticResource TextColor}"
@@ -79,8 +79,8 @@
                            FontStyle="Italic"
                            FontWeight="Bold"/>
             </Border>
-            <TextBlock x:Name="timeTextBlock" HorizontalAlignment="Left" Margin="-188,404,0,0" Grid.Row="1" TextWrapping="Wrap"
-                       VerticalAlignment="Top" Text="Time: 00:00" Height="27" Width="140" FontSize="20" Grid.RowSpan="2"
+            <TextBlock x:Name="timeTextBlock" HorizontalAlignment="Left" Margin="-158,403,0,0" Grid.Row="1" TextWrapping="Wrap"
+                       VerticalAlignment="Top" Text="Time: 00:00" Height="29" Width="141" FontSize="20" Grid.RowSpan="2"
                        FontFamily="Old English Text MT" FontStyle="Italic" FontWeight="Bold"/>
         </Grid>
     </Viewbox>

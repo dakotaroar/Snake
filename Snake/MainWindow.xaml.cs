@@ -50,14 +50,13 @@ namespace Snake
         private GameState gameState;
         private bool gameRunning;
         private int highScore = 0;
+        private Random random = new Random();
         public MainWindow()
         {
-            // Initialize the timer
             timer = new DispatcherTimer();
-            timer.Interval = TimeSpan.FromSeconds(1); // Set the interval to 1 second
+            timer.Interval = TimeSpan.FromSeconds(1);
             timer.Tick += OnTimerTick;
 
-            // Initial seconds value
             seconds = 0;
 
             InitializeComponent();
@@ -79,16 +78,13 @@ namespace Snake
             }
         }
 
-        private void OnTimerTick(object sender, EventArgs e)
+        private async void OnTimerTick(object sender, EventArgs e)
         {
-            // Calculate minutes and remaining seconds
             int minutes = seconds / 60;
             int remainingSeconds = seconds % 60;
 
-            // Update the TextBlock with the formatted time
             timeTextBlock.Text = $"Time: {minutes:D2}:{remainingSeconds:D2}";
 
-            // Increment the seconds counter
             seconds++;
         }
 
@@ -177,8 +173,9 @@ namespace Snake
             return images;
         }
 
-        private void Draw()
+        private async void Draw()
         {
+            ShakeWindow(150);
             DrawGrid();
             DrawSnakeHead();
             ScoreText.Text = $"SCORE {gameState.Score}";
@@ -288,6 +285,22 @@ namespace Snake
             OverlayText.Text = "PRESS ANY KEY TO START";
         }
 
+
+        private async Task ShakeWindow(int durationMs)
+        {
+            var oLeft = this.Left;
+            var oTop = this.Top;
+
+            var shakeTimer = new DispatcherTimer();
+            shakeTimer.Tick += (sender, args) =>
+            {
+                this.Left = oLeft + random.Next(-6, 6);
+                this.Top = oTop + random.Next(-6, 6);
+            };
+
+            shakeTimer.Interval = TimeSpan.FromMilliseconds(200);
+            shakeTimer.Start();
+        }
     }
 }
 
