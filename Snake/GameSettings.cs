@@ -6,12 +6,9 @@ using System.Threading.Tasks;
 
 namespace Snake
 {
-    public enum GridValue
+    internal class GameSettings
     {
-        Empty,
-        Snake,
-        Food,
-        Wall,
-        Outside
+        public static int BoostSpeed { get; set; } = 50;
+        public static double WallDensity { get; set; } = 0;
     }
 }

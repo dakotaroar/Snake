@@ -30,6 +30,7 @@ namespace Snake
 
             AddSnake();
             AddFood();
+            AddWall();
         }
 
         private void AddSnake()
@@ -68,7 +69,27 @@ namespace Snake
             Grid[pos.Row, pos.Col] = GridValue.Food;
         }
 
+        private void AddWall()
+        {
+            List<Position> empty =
+                new List<Position>(EmptyPositions());
 
+            int numberOfWalls = (int)(Rows * Cols * GameSettings.WallDensity);
+
+            for (int c = 0; c < numberOfWalls; c++)
+            {
+                if (empty.Count == 0)
+                    return;
+
+                int posNumber = random.Next(0, empty.Count);
+
+                Position pos = empty[posNumber];
+                Grid[pos.Row, pos.Col] = GridValue.Wall;
+                empty.RemoveAt(posNumber);
+            }
+        }
+
+        #region Positions
         public Position HeadPosition()
         {
             return snakePositions.First.Value;
@@ -83,7 +104,7 @@ namespace Snake
         {
             return snakePositions;
         }
-
+        #endregion
         private void AddHead(Position pos)
         {
             snakePositions.AddFirst(pos);
@@ -96,7 +117,7 @@ namespace Snake
             Grid[tail.Row, tail.Col] = GridValue.Empty;
             snakePositions.RemoveLast();
         }
-
+        #region Directions
         private Direction GetLastDirection()
         {
             if (dirChanges.Count ==0)
@@ -125,7 +146,7 @@ namespace Snake
                 dirChanges.AddLast(dir);
             }
         }
-
+        #endregion
         private bool OutsideGrid(Position pos)
         {
             return pos.Row < 0 || pos.Row >= Rows

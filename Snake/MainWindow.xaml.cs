@@ -28,12 +28,13 @@ namespace Snake
         private AudioFileReader audioFileReader;
         private DispatcherTimer timer;
         private int seconds;
-
+        #region Dictionarys
         private readonly Dictionary<GridValue, ImageSource> gridValToImage = new()
         {
             { GridValue.Empty, Images.Empty },
             { GridValue.Snake, Images.Body },
             { GridValue.Food, Images.Food },
+            { GridValue.Wall, Images.Wall },
         };
 
         private readonly Dictionary<Direction, int> dirToRotation = new()
@@ -43,7 +44,7 @@ namespace Snake
             { Direction.Down, 180 },
             { Direction.Left, 270 }
         };
-
+        #endregion
         private readonly int rows = 40;
         private readonly int cols = 50;
         private readonly Image[,] gridImages;
@@ -51,6 +52,8 @@ namespace Snake
         private bool gameRunning;
         private int highScore = 0;
         private Random random = new Random();
+        private int boostSpeed = 0;
+        #region Main Window
         public MainWindow()
         {
             timer = new DispatcherTimer();
@@ -77,7 +80,8 @@ namespace Snake
                 sw.Close();
             }
         }
-
+        #endregion
+        #region OnTimerTick
         private async void OnTimerTick(object sender, EventArgs e)
         {
             int minutes = seconds / 60;
@@ -87,8 +91,8 @@ namespace Snake
 
             seconds++;
         }
-
-
+        #endregion
+        #region RunGame
         private async Task RunGame()
         {
             timer.Start();
@@ -99,7 +103,8 @@ namespace Snake
             await ShowGameOver();
             gameState = new GameState(rows, cols);
         }
-
+        #endregion
+        #region Window_PreviewKeyDown
         private async void Window_PreviewKeyDown(object sender, KeyEventArgs e)
         {
             if (Overlay.Visibility == Visibility.Visible)
@@ -114,7 +119,8 @@ namespace Snake
                 gameRunning = false;
             }
         }
-
+        #endregion
+        #region Window_KeyDown
         private void Window_KeyDown(object sender, KeyEventArgs e)
         {
             if (gameState.GameOver)
@@ -136,14 +142,25 @@ namespace Snake
                 case Key.Down:
                     gameState.ChangedDirection(Direction.Down);
                     break;
+                case Key.Space:
+                    if (boostSpeed == 0)
+                    {
+                        boostSpeed = GameSettings.BoostSpeed;
+                    }
+                    else
+                    {
+                        boostSpeed = 0;
+                    }
+                    break;
             }
         }
-
+        #endregion
+        #region GameLoop and SetupGrid
         private async Task GameLoop()
         {
             while (!gameState.GameOver)
             {
-                await Task.Delay(100);
+                await Task.Delay(100-boostSpeed);
                 gameState.Move();
                 Draw();
             }
@@ -172,10 +189,11 @@ namespace Snake
 
             return images;
         }
-
+        #endregion
+        #region Draw
         private async void Draw()
         {
-            ShakeWindow(150);
+            ShakeWindow(2);
             DrawGrid();
             DrawSnakeHead();
             ScoreText.Text = $"SCORE {gameState.Score}";
@@ -212,7 +230,9 @@ namespace Snake
                 waveOut.Play();
             }
         }
-
+        #endregion
+        #region Draw'something'
+        #region Grid
         private void DrawGrid()
         {
             for (int r=0; r < rows;r++)
@@ -225,7 +245,8 @@ namespace Snake
                 }
             }
         }
-
+        #endregion
+        #region SnakeHead
         private void DrawSnakeHead()
         {
             Position headPos = gameState.HeadPosition();
@@ -235,7 +256,8 @@ namespace Snake
             int rotation = dirToRotation[gameState.Dir];
             image.RenderTransform = new RotateTransform(rotation);
         }
-
+        #endregion
+        #region DeadSnake
         private async Task DrawDeadSnake()
         {
             var audioFile = new AudioFileReader("C:\\Users\\802630ctc\\source\\repos\\Snake\\Snake\\Assets\\femur-breaker-[AudioTrimmer.com].mp3");
@@ -243,15 +265,19 @@ namespace Snake
             waveOut.Init(audioFile);
             waveOut.Play();
             List<Position> positions = new List<Position>(gameState.SnakePositions());
+
             for (int i = 0; i < positions.Count; i++)
             {
                 Position pos = positions[i];
                 ImageSource source = (i ==0) ? Images.DeadHead : Images.DeadBody;
                 gridImages[pos.Row, pos.Col].Source = source;
-                await Task.Delay(50);
+                await Task.Delay(Math.Max(50-i,1));
             }
         }
-
+        #endregion
+        #endregion
+        #region Show'something'
+        #region CountDown
         private async Task ShowCountDown()
         {
             var audioFile = new AudioFileReader("C:\\Users\\802630ctc\\source\\repos\\Snake\\Snake\\Assets\\nnnnn_luSV5Gb.mp3");
@@ -265,7 +291,8 @@ namespace Snake
                 await Task.Delay(500);
             }
         }
-
+        #endregion
+        #region GameOver
         private async Task ShowGameOver()
         {
             if (gameState.Score > highScore)
@@ -284,23 +311,28 @@ namespace Snake
             Overlay.Visibility = Visibility.Visible;
             OverlayText.Text = "PRESS ANY KEY TO START";
         }
-
-
+        #endregion
+        #endregion
+        #region ShakeWindow
         private async Task ShakeWindow(int durationMs)
         {
             var oLeft = this.Left;
             var oTop = this.Top;
 
-            var shakeTimer = new DispatcherTimer();
+            var shakeTimer = new DispatcherTimer(DispatcherPriority.Send);
             shakeTimer.Tick += (sender, args) =>
             {
-                this.Left = oLeft + random.Next(-6, 6);
-                this.Top = oTop + random.Next(-6, 6);
+                this.Left = oLeft + random.Next(-5, 5);
+                this.Top = oTop + random.Next(-5, 5);
             };
 
             shakeTimer.Interval = TimeSpan.FromMilliseconds(200);
             shakeTimer.Start();
+
+            await Task.Delay(durationMs);
+            shakeTimer.Stop();
         }
+        #endregion
     }
 }
 
