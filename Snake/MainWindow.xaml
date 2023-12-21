@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Snake"
         mc:Ignorable="d"
-        Title="Totally AmongUs™" Height="900" Width="1400" 
+        Title="Dark SnakeGame™" Height="800" Width="1200" 
         MinWidth="300" MinHeight="300"
         Background="{StaticResource BackGroundColor}"
         Foreground="{StaticResource TextColor}"

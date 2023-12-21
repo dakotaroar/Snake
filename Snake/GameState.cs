@@ -16,11 +16,12 @@ namespace Snake
         public Direction Dir {get; private set; }
         public int Score { get; private set; }
         public bool GameOver { get; private set; }
-
+        #region readonlys
         private readonly LinkedList<Direction> dirChanges = new LinkedList<Direction>();
         private readonly LinkedList<Position> snakePositions = new LinkedList<Position>();
         private readonly Random random = new Random();
-
+        #endregion
+        #region GameState
         public GameState(int rows, int cols)
         {
             Rows = rows;
@@ -32,7 +33,8 @@ namespace Snake
             AddFood();
             AddWall();
         }
-
+        #endregion
+        #region Add'something
         private void AddSnake()
         {
             int r = Rows / 2;
@@ -41,20 +43,6 @@ namespace Snake
             {
                 Grid[r, c] = GridValue.Snake;
                 snakePositions.AddFirst(new Position(r, c));
-            }
-        }
-
-
-
-        private IEnumerable<Position> EmptyPositions()
-        {
-            for (int r=0; r < Rows; r++)
-            {
-                for(int c=0; c < Cols; c++)
-                {
-                    if (Grid[r, c] == GridValue.Empty)
-                            yield return new Position(r, c);
-                }
             }
         }
 
@@ -88,8 +76,25 @@ namespace Snake
                 empty.RemoveAt(posNumber);
             }
         }
-
+        private void AddHead(Position pos)
+        {
+            snakePositions.AddFirst(pos);
+            Grid[pos.Row, pos.Col] = GridValue.Snake;
+        }
+        #endregion
         #region Positions
+        private IEnumerable<Position> EmptyPositions()
+        {
+            for (int r=0; r < Rows; r++)
+            {
+                for(int c=0; c < Cols; c++)
+                {
+                    if (Grid[r, c] == GridValue.Empty)
+                            yield return new Position(r, c);
+                }
+            }
+        }  
+
         public Position HeadPosition()
         {
             return snakePositions.First.Value;
@@ -105,11 +110,6 @@ namespace Snake
             return snakePositions;
         }
         #endregion
-        private void AddHead(Position pos)
-        {
-            snakePositions.AddFirst(pos);
-            Grid[pos.Row, pos.Col] = GridValue.Snake;
-        }
 
         private void RemoveTail()
         {
@@ -147,12 +147,12 @@ namespace Snake
             }
         }
         #endregion
+        #region WillHit and OutsideGrid
         private bool OutsideGrid(Position pos)
         {
             return pos.Row < 0 || pos.Row >= Rows
                 || pos.Col < 0 || pos.Col >= Cols;
         }
-
         private GridValue WillHit(Position newHeadPos)
         {
             if (OutsideGrid(newHeadPos))
@@ -166,7 +166,8 @@ namespace Snake
             }
             return Grid[newHeadPos.Row, newHeadPos.Col];
         }
-
+        #endregion
+        #region Move
         public void Move()
         {
             if (dirChanges.Count >0)
@@ -195,9 +196,11 @@ namespace Snake
                 waveOut.Play();
 
                 AddHead(newHeadPos);
+                AddHead(newHeadPos);
                 Score++;
                 AddFood();
             }
         }
+        #endregion
     }
 }

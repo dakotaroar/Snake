@@ -193,7 +193,7 @@ namespace Snake
         #region Draw
         private async void Draw()
         {
-            ShakeWindow(2);
+            ShakeWindow(100);
             DrawGrid();
             DrawSnakeHead();
             ScoreText.Text = $"SCORE {gameState.Score}";
@@ -326,11 +326,11 @@ namespace Snake
                 this.Top = oTop + random.Next(-5, 5);
             };
 
-            shakeTimer.Interval = TimeSpan.FromMilliseconds(200);
+            shakeTimer.Interval = TimeSpan.FromMilliseconds(8400);
             shakeTimer.Start();
 
-            await Task.Delay(durationMs);
-            shakeTimer.Stop();
+            //await Task.Delay(durationMs);
+            //shakeTimer.Stop();
         }
         #endregion
     }
